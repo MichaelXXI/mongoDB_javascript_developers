@@ -239,7 +239,7 @@ export default class MoviesDAO {
         queryParams = this.genreSearchQuery(filters["genre"])
       }
     }
-    debugger
+
     let { query = {}, project = {}, sort = DEFAULT_SORT } = queryParams
     let cursor
     try {
@@ -263,7 +263,8 @@ export default class MoviesDAO {
 
     // TODO Ticket: Paging
     // Use the cursor to only return the movies that belong on the current page
-    const displayCursor = cursor.limit(moviesPerPage)
+    const pagination = page * moviesPerPage
+    const displayCursor = cursor.limit(moviesPerPage).skip(pagination)
 
     try {
       const moviesList = await displayCursor.toArray()
