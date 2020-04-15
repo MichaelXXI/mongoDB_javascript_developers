@@ -303,8 +303,24 @@ export default class MoviesDAO {
       // Implement the required pipeline.
       const pipeline = [
         {
-          $match: {
-            _id: ObjectId(id)
+          '$match': {
+            '_id': new ObjectId(id)
+          }
+        }, {
+          '$lookup': {
+            'from': 'comments',
+            'pipeline': [
+              {
+                '$match': {
+                  '$expr': {
+                    '$eq': [
+                      '$movie_id', new ObjectId(id)
+                    ]
+                  }
+                }
+              }
+            ],
+            'as': 'comments'
           }
         }
       ]
